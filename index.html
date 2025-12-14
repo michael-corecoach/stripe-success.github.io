@@ -3,90 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Close CoreCoach</title>
-  <style>
-    :root {
-      color-scheme: light dark;
-    }
-    body {
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #0f172a;
-      color: #e2e8f0;
-    }
-    .card {
-      padding: 24px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.06);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-      text-align: center;
-      max-width: 420px;
-    }
-    h1 {
-      margin: 0 0 12px;
-      font-size: 1.6rem;
-    }
-    p {
-      margin: 0 0 16px;
-      color: #cbd5e1;
-      line-height: 1.4;
-    }
-    button {
-      display: block;
-      width: 100%;
-      border: none;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: linear-gradient(120deg, #38bdf8, #6366f1);
-      color: #0b1220;
-      transition: transform 120ms ease, filter 120ms ease;
-    }
-    button.secondary {
-      margin-top: 10px;
-      background: rgba(255, 255, 255, 0.12);
-      color: #e2e8f0;
-    }
-    button:active {
-      transform: scale(0.98);
-      filter: brightness(0.95);
-    }
-  </style>
+  <title>Closing…</title>
   <script>
     (function() {
       const appLink = 'corecoachapp://corecoach.app/navigation-pop';
 
-      function launchApp() {
-        window.location.href = appLink;
-      }
-
       function closeView() {
-        window.close();
-        history.back();
+        // Try to close the webview/window; fall back to history/back.
+        try { window.close(); } catch (_) {}
+        try { history.back(); } catch (_) {}
       }
 
-      window.addEventListener('load', () => {
-        // Try to return to the app immediately, then attempt to close.
-        launchApp();
-        setTimeout(closeView, 1200);
-      });
+      function launchAndClose() {
+        // Kick to the app and then attempt to close shortly after.
+        window.location.href = appLink;
+        setTimeout(closeView, 800);
+      }
 
-      window.__ccLaunchApp = launchApp;
-      window.__ccCloseView = closeView;
+      window.addEventListener('load', launchAndClose);
     })();
   </script>
 </head>
-<body>
-  <div class="card">
-    <h1>All done</h1>
-    <p>You can close this window and return to the CoreCoach app.</p>
-    <button onclick="window.__ccLaunchApp()">Return to app</button>
-    <button class="secondary" onclick="window.__ccCloseView()">Close window</button>
-  </div>
+<body style="margin:0;background:#000;color:#000;">
+  <!-- Intentional blank page; JS handles deep-link + close. -->
 </body>
 </html>
